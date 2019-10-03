@@ -1,10 +1,31 @@
 #include <stdio.h>
 
-// have to prototype the void functions
-void bubbleSort(int array[], int size);
-void print(int array[], int size);
+// sort the array
+void bubbleSort(int array[], int size) {
+    // go through the entire array multiple times to switch adjacent elements
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                // swap adjacent elements when necessary
+                int temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}
 
-main() {
+// print the array
+void print(int array[], int size) {
+    // linearly go through every element
+    for(int i = 0; i < size - 1; i++) {
+        printf("%d, ",array[i]);
+    }
+    printf("%d\n",array[size - 1]);
+}
+
+
+int main(void) {
     int a[3] = {2,4,1};
     int size = sizeof(a)/sizeof(a[0]);
     bubbleSort(a, size);
@@ -19,28 +40,5 @@ main() {
     size = sizeof(c)/sizeof(int);
     bubbleSort(c, size);
     print(c, size);
-}
-
-// print the array
-void print(int array[], int size) {
-    // linearly go through every element
-    for(int i = 0; i < size - 1; i++) {
-        printf("%d, ",array[i]);
-    }
-    printf("%d\n",array[size - 1]);
-}
-
-// sort the array
-void bubbleSort(int array[], int size) {
-    // go through the entire array multiple times to switch adjacent elements
-    for (int i = 0; i < size - 1; i++) {
-        for (int j = 0; j < size - 1; j++) {
-            if (array[j] > array[j + 1]) {
-                // swap adjacent elements when necessary
-                int temp = array[j];
-                array[j] = array[j + 1];
-                array[j + 1] = temp;
-            }
-        }
-    }
+    return 0;
 }

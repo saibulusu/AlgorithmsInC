@@ -1,99 +1,79 @@
 #include <stdio.h>
 
-// prototype the functions
-void print(int array[], int size);
-int* merge(int* left, int leftSize, int* right, int rightSize);
-void mergeSort(int array[], int size);
-int* sort(int* array, int size, int low, int high);
-
-main() {
-    int a[3] = {2,4,1};
-    int size = sizeof(a)/sizeof(int);
-    mergeSort(a, size);
-    print(a, size);
-
-    int b[10] = {23,4,1,4,5,2,0,0,0,0};
-    int size = sizeof(b)/sizeof(int);
-    mergeSort(b, size);
-    print(b, size);
-
-    int c[7] = {2,6,1,-11,4,2,6};
-    size = sizeof(c)/sizeof(int);
-    mergeSort(c, size);
-    print(c, size);
-}
-
-// sort the array
-void mergeSort(int array[], int size) {
-    // have to individually alter elements in this array
-    int* temp = sort(array, size, 0, size);
-    for (int i = 0; i < size; i++) {
-        array[i] = temp[i];
-    }
-    free(temp);
-}
-
-// divide method to break the element into 1-element arrays
-int* sort(int* array, int size, int low, int high) {
-    if (low == high) {
-        int* temp = malloc(sizeof(int));
-        temp[0] = array[low];
-        // free(temp);
-        return temp;
-    } else {
-        // dividing mechanism
-        int mid = low + (high - low) / 2;
-        int* left = sort(array, size, low, mid);
-        int* right = sort(array, size, mid+1, high);
-        // merge the left and right arrays
-        return merge(left, mid - low + 1, right, high - mid);
-    }
-}
-
-// merge two arrays
-int* merge(int* left, int leftSize, int* right, int rightSize) {
-    int* temp = malloc(sizeof(int) * (leftSize + rightSize));
-
-    int l = 0;
-    int r = 0;
-
-    int i = 0;
-    // actually sort the array
-    while (l < leftSize && r < rightSize) {
-        if (left[l] < right[r]) {
-            temp[i] = left[l];
-            l++;
-        } else {
-            temp[i] = right[r];
-            r++;
-        }
-        i++;
-    }
-    
-    while (l < leftSize) {
-        temp[i] = left[l];
-        l++;
-        i++;
-    }
-
-    while (r < rightSize) {
-        temp[i] = right[r];
-        r++;
-        i++;
-    }
-
-    free(left);
-    free(right);
-    
-    // free(temp);
-    return temp;
-}
-
-// print the array
 void print(int array[], int size) {
-    // linearly go through every element
     for(int i = 0; i < size - 1; i++) {
         printf("%d, ",array[i]);
     }
     printf("%d\n",array[size - 1]);
+}
+
+void merge(int array[], int size, int lo, int mid, int hi) {
+    int leftSize = mid - lo + 1;
+    int left[leftSize];
+    for (int i = 0; i < mid - lo + 1; i++) {
+        left[i] = array[lo + i];
+    }
+    int rightSize = hi - mid;
+    int right[rightSize];
+    for (int i = 0; i < hi - mid; i++) {
+        right[i] = array[i + mid + 1];
+    }
+
+    int lTemp = 0;
+    int rTemp = 0;
+    int i = lo;
+    while (lTemp < leftSize && rTemp < rightSize) {
+        if (left[lTemp] <= right[rTemp]) {
+            array[i] = left[lTemp];
+            lTemp++;
+        } else {
+            array[i] = right[rTemp];
+            rTemp++;
+        }
+        i++;
+    }
+
+    while (lTemp < leftSize) {
+        array[i] = left[lTemp];
+        lTemp++;
+        i++;
+    }
+
+    while (rTemp < rightSize) {
+        array[i] = right[rTemp];
+        rTemp++;
+        i++;
+    }
+}
+
+void divide(int array[], int size, int lo, int hi) {
+    if (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        divide(array, size, lo, mid);
+        divide(array, size, mid + 1, hi);
+        merge(array, size, lo, mid, hi);
+    }
+}
+
+void mergeSort(int array[], int size) {
+    divide(array, size, 0, size - 1);
+}
+
+int main() {
+    int a[] = {2,4,1};
+    int aSize = sizeof(a) / sizeof(a[0]);
+    mergeSort(a, aSize);
+    print(a, aSize);
+
+    int b[] = {4,5,6,7,0,1,2,3};
+    int bSize = sizeof(b) / sizeof(b[0]);
+    mergeSort(b, bSize);
+    print(b, bSize);
+
+    int c[] = {10,9,8,7,6,5,4,3,2,1,0};
+    int cSize = sizeof(c) / sizeof(c[0]);
+    mergeSort(c, cSize);
+    print(c, cSize);
+
+    return 0;
 }

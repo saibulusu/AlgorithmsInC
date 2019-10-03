@@ -1,25 +1,15 @@
 #include <stdio.h>
 
-// prototype the void functions
-void insertionSort(int array[], int size);
-void print(int array[], int size);
-void shift(int array[], int i, int j);
-
-main() {
-    int a[3] = {2,4,1};
-    int size = sizeof(a)/sizeof(int);
-    insertionSort(a, size);
-    print(a, size);
-
-    int b[10] = {223,4,1,4,5,2};
-    size = sizeof(b)/sizeof(int);
-    insertionSort(b, size);
-    print(b, size);
-
-    int c[7] = {2,6,1,-11,4,2,6};
-    size = sizeof(c)/sizeof(int);
-    insertionSort(c, size);
-    print(c, size);
+void insertionSort(int array[], int size) {
+    for (int i = 1; i < size; i++) {
+        int j = i;
+        while (j >= 1 && array[j] < array[j - 1]) {
+            int temp = array[j];
+            array[j] = array[j - 1];
+            array[j - 1] = temp;
+            j--;
+        }
+    }
 }
 
 // print the array
@@ -31,23 +21,26 @@ void print(int array[], int size) {
     printf("%d\n",array[size - 1]);
 }
 
-// move all elements of the unsorted portion of the array into the sorted portion of the array
-void insertionSort(int array[], int size) {
-    for (int i = 1; i < size; i++) {
-        // for each element, determine where to rotate
-        for (int j = 0; j < i; j++) {
-            if (array[i] < array[j]) {
-                shift(array, i, j);
-            }
-        }
-    }
-}
+int main(void) {
+    int a[] = {3,1,2};
+    int aSize = sizeof(a) / sizeof(a[0]);
+    insertionSort(a, aSize);
+    print(a, aSize);
 
-// rotate the array indices once the rotation locations are found
-void shift(int array[], int i, int j) {
-    int temp = array[i];
-    for (int k = i; k >= j; k--) {
-        array[k] = array[k-1];
-    }
-    array[j] = temp;
+    int b[] = {223,4,1,4,5,2};
+    int bSize = sizeof(b) / sizeof(b[0]);
+    insertionSort(b, bSize);
+    print(b, bSize);
+
+    int c[] = {-1, 4, -2, 0, -11};
+    int cSize = sizeof(c) / sizeof(c[0]);
+    insertionSort(c, cSize);
+    print(c, cSize);
+
+    int d[] = {223,4,1,4,5,2};
+    int dSize = sizeof(d) / sizeof(d[0]);
+    insertionSort(d, dSize);
+    print(d, dSize);
+
+    return 0;
 }

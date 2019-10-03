@@ -1,11 +1,30 @@
 #include <stdio.h>
 
-// prototype the void functions
-void selectionSort(int array[], int size);
-void print(int array[], int size);
-void shift(int array[], int i, int j);
+// print the array
+void print(int array[], int size) {
+    // linearly go through every element
+    for(int i = 0; i < size - 1; i++) {
+        printf("%d, ",array[i]);
+    }
+    printf("%d\n",array[size - 1]);
+}
 
-main() {
+// determine the smallest value at any time and place it into the sorted portion of the array at the end
+void selectionSort(int array[], int size) {
+    for (int i = 0; i < size; i++) {
+        int min = i;
+        for (int j = i; j < size; j++) {
+            if (array[j] < array[min]) {
+                min = j;
+            }
+        }
+        int temp = array[min];
+        array[min] = array[i];
+        array[i] = temp;
+    }
+}
+
+int main() {
     int a[3] = {2,4,1};
     int size = sizeof(a)/sizeof(int);
     selectionSort(a, size);
@@ -20,30 +39,6 @@ main() {
     size = sizeof(c)/sizeof(int);
     selectionSort(c, size);
     print(c, size);
-}
 
-// print the array
-void print(int array[], int size) {
-    // linearly go through every element
-    for(int i = 0; i < size - 1; i++) {
-        printf("%d, ",array[i]);
-    }
-    printf("%d\n",array[size - 1]);
-}
-
-// determine the smallest value at any time and place it into the sorted portion of the array at the end
-void selectionSort(int array[], int size) {
-    for (int i = 0; i < size; i++) {
-        // get the smallest unsorted element
-        int min = i;
-        for (int j = i; j < size; j++) {
-            if (*(array + min) > *(array + j)) {
-                min = j;
-            }
-        }
-        // append that element to the end of the sorted portion of the array
-        int temp = array[i];
-        array[i] = array[min];
-        array[min] = temp;
-    }
+    return 0;
 }
