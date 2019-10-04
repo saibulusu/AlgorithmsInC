@@ -1,77 +1,63 @@
 #include <stdio.h>
 
-// prototype the functions
-void print(int array[], int size);
-void quickSort(int array[], int size);
-void sort(int array[], int size, int low, int high);
-int partition(int array[], int size, int start, int end);
-
-// test code
-main() {
-    int a[3] = {2,4,1};
-    int size = sizeof(a)/sizeof(int);
-    quickSort(a, size);
-    print(a, size);
-
-    int b[10] = {23,4,1,4,5,2,0,0,0,0};
-    size = sizeof(b)/sizeof(int);
-    quickSort(b, size);
-    print(b, size);
-
-    int c[7] = {2,6,1,-11,4,2,6};
-    size = sizeof(c)/sizeof(int);
-    quickSort(c, size);
-    print(c, size);
-}
-
-// sort the array
-void quickSort(int array[], int size) {
-    sort(array, size, 0, size - 1);
-}
-
-// create bounds to sort the array
-void sort(int array[], int size, int low, int high) {
-    // don't have to do anything if the bounds meet
-    if (low >= high) return;
-    int pivot = partition(array, size, low, high);
-    sort(array, size, low, pivot);
-    sort(array, size, pivot + 1, high);
-}
-
-// actually sort the array
-int partition(int array[], int size, int start, int end) {
-    int l = start;
-    int h = end;
-    int pivot = l + (h - l) / 2;
-    // counter boolean to always continue this loop
-    while (1) {
-        // find the first values from the left and right respectively to swap, so that eventually everyting
-        // to the left of the pivot is less than the pivot, and everything to the right of the pivot is greater
-        // than the pivot
-        while (array[l] < array[pivot]) {
-            l++;
-        }
-        while (array[h] > array[pivot]) {
-            h--;
-        }
-        if (l >= h) {
-            break;
-        } else {
-            int temp = array[l];
-            array[l] = array[h];
-            array[h] = temp;
-            l++;
-            h--;
-        }
-    }
-    return h;
-}
-
-// print the array
 void print(int array[], int size) {
-    // linearly go through every element
     for(int i = 0; i < size - 1; i++) {
         printf("%d, ",array[i]);
     }
     printf("%d\n",array[size - 1]);
 }
+
+int partition(int array[], int lo, int hi) {
+    // pivot around the last element
+    int pivot = array[hi];
+    // go through all of the elements and keep the ones lower than the pivot to the left
+    int i = lo - 1;
+    // everything to the left of i+1 has to be less than the pivot
+    for (int j = lo; j < hi; j++) {
+        if (array[j] < pivot) {
+            i++;
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+    // swap the values at i+1 and temp
+    int temp = array[i + 1];
+    array[i + 1] = array[hi];
+    array[hi] = temp;
+    // everything has been partitioned around i+1
+    return i + 1;
+}
+
+void divide(int array[], int lo, int hi) {
+    if (lo < hi) {
+        int p = partition(array, lo, hi);
+        // partition around p
+        divide(array, lo, p - 1);
+        divide(array, p + 1, hi);
+    }
+}
+
+void quickSort(int array[], int size) {
+    divide(array, 0, size - 1);
+}
+
+int main() {
+    int a[] = {2,4,1};
+    int aSize = sizeof(a) / sizeof(a[0]);
+    quickSort(a, aSize);
+    print(a, aSize);
+
+    int b[] = {4,5,6,7,0,1,2,3};
+    int bSize = sizeof(b) / sizeof(b[0]);
+    quickSort(b, bSize);
+    print(b, bSize);
+
+    int c[] = {10,9,8,7,6,5,4,3,2,1,0};
+    int cSize = sizeof(c) / sizeof(c[0]);
+    quickSort(c, cSize);
+    print(c, cSize);
+
+    return 0;
+}
+
